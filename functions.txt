@@ -1,0 +1,149 @@
+
+/*
+	Percentage match calculation for distance(miles):
+	Distance in 0 - 2 = 30%
+	Distance in 2 - 4 = 25%
+	Distance in 4 - 6 = 20%
+	Distance in 6 - 8 = 15%
+	Distance in 8 - 10 = 10%
+*/
+function match_distance(lat1, long1, lat2, long2)
+{
+	d = Haversineformula; //find distance in miles using Haversine Formula.
+	if( d <= 2)
+	{
+		return 30;
+	}
+	else if( d > 2 && d <= 4 )
+	{
+		return 25;
+	}
+	else if( d > 4 && d <= 6 )
+	{
+		return 20;
+	}
+	else if( d > 6 && d <= 8 )
+	{
+		return 15;
+	}
+	else if( d > 8 && d <= 10 )
+	{
+		return 10;
+	}
+	else
+	{
+		return 0;
+	}
+}
+
+/*
+	Percentage match calculation for budget:
+	Budget in Min - Max = 30%
+	Budget +-10% = 30%
+	Budget +-20% = 20%
+	Budget +-25% = 10%
+*/
+
+function match_budget(price, Price_min, Price_max = false)
+{
+	if(!Price_max)
+	{
+		Price_min_limit = Price_min;
+		Price_max_limit = Price_min;
+	}
+	else
+	{
+		Price_min_limit = Price_min;
+		Price_max_limit = Price_max;
+	}
+	if(Price_min_limit - 10% <= price && Price_max_limit -10% >= price)
+	{
+		return 30;
+	}
+	else if(Price_min_limit - 20% <= price && Price_max_limit -20% >= price)
+	{
+		return 20;
+	}
+	else if(Price_min_limit - 25% <= price && Price_max_limit -25% >= price)
+	{
+		return 10;
+	}
+	else
+	{
+		return 0;
+	}
+}
+
+/*
+	Percentage match calculation for bathroom:
+	Bathroom in Min - Max = 20%
+	Bathroom +-1 = 12%
+	Bathroom +-2 = 5%
+*/
+
+function match_bathroom(bath, bathroom_min, bathroom_max = false)
+{
+	if(!bathroom_max)
+	{
+		bathroom_min_limit = bathroom_min;
+		bathroom_max_limit = bathroom_min;
+	}
+	else
+	{
+		bathroom_min_limit = bathroom_min;
+		bathroom_max_limit = bathroom_max;
+	}
+	if(bathroom_min_limit <= bath && bathroom_max_limit >= bath)
+	{
+		return 20;
+	}
+	else if(bathroom_min_limit - 1 <= bath && bathroom_max_limit + 1 >= bath)
+	{
+		return 12;
+	}
+	else if(bathroom_min_limit - 2 <= bath && bathroom_max_limit + 2 >= bath)
+	{
+		return 5;
+	}
+	else
+	{
+		return 0;
+	}
+}
+
+/*
+	Percentage match calculation for bedroom:
+	Bedroom in Min - Max = 20%
+	Bedroom +-1 = 12%
+	Bedroom +-2 = 5%
+*/
+
+function match_bedroom(bed, bedroom_min, bedroom_max = false)
+{
+	if(!bedroom_max)
+	{
+		bedroom_min_limit = bedroom_min;
+		bedroom_max_limit = bedroom_min;
+	}
+	else
+	{
+		bedroom_min_limit = bedroom_min;
+		bedroom_max_limit = bedroom_max;
+	}
+	if(bedroom_min_limit <= bed && bedroom_max_limit >= bed)
+	{
+		return 20;
+	}
+	else if(bedroom_min_limit - 1 <= bed && bedroom_max_limit + 1 >= bed)
+	{
+		return 12;
+	}
+	else if(bedroom_min_limit - 2 <= bed && bedroom_max_limit + 2 >= bed)
+	{
+		return 5;
+	}
+	else
+	{
+		return 0;
+	}
+}

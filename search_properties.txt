@@ -1,0 +1,78 @@
+/*This function will be called whenever a requirement is added.
+The function goes through the Properties table and returns match % for all matches above 40% and saves the result in Matches table.
+All user defined functions called in thed function search_properties are present in functions.txt.
+*/
+function search_properties(array requirements)
+{
+	if(!isset(requirements['Price_max'])) //This is true when only one budget attribute is given
+	{
+		int Price_min_limit = requirements['Price_min'] - 25%;
+		int Price_max_limit = requirements['Price_min'] + 25%;
+	}
+	else
+	{
+		int Price_min_limit = requirements['Price_min'] - 25%;
+		int Price_max_limit = requirements['Price_max'] + 25%;
+	}
+
+	if(!isset(requirements['bathroom_max'])) //This is true when only one bathroom attribute is given
+	{
+		int bathroom_min_limit = requirements['bathroom_min'] - 2;
+		int bathroom_max_limit = requirements['bathroom_min'] + 2;
+	}
+	else
+	{
+		int bathroom_min_limit = requirements['bathroom_min'] - 2;
+		int bathroom_max_limit = requirements['bathroom_max'] + 2;
+	}
+
+	if(!isset(requirements['bedroom_max'])) //This is true when only one bedroom attribute is given
+	{
+		int bedroom_min_limit = requirements['bedroom_min'] - 2;
+		int bedroom_max_limit = requirements['bedroom_min'] + 2;
+	}
+	else
+	{
+		int bedroom_min_limit = requirements['bedroom_min'] - 2;
+		int bedroom_max_limit = requirements['bedroom_max'] + 2;
+	}
+
+	array porperties_results = run_query("SELECT * FROM properties p WHERE distance_found_by_Haversine_formula < 10 AND Price BETWEEN Price_min_limit AND Price_max_limit AND Bed BETWEEN bed_min_limit AND bed_max_limit AND Bath BETWEEN bathroom_min_limit AND bathroom_max_limit");
+
+
+	foreach porperties_results as property
+	{
+		int match_percentage = match_distance(property['Lat'], property['Long'], requirements['Lat'], requirements['Long']);
+
+		if(!isset(requirements['Price_max'])) //This is true when only one budget attribute is given
+		{
+			match_percentage += match_budget(property['Price'], requirements['Price_min']);
+		}
+		else
+		{
+			match_percentage += match_budget(property['Price'], requirements['Price_min'], requirements['Price_max']);
+		}
+
+		if(!isset(requirements['bathroom_max'])) //This is true when only one bathroom attribute is given
+		{
+			match_percentage += match_bathroom(property['Bath'], requirements['bathroom_min']);
+		}
+		else
+		{
+			match_percentage += match_bathroom(property['Bath'], requirements['bathroom_min'], requirements['bathroom_max']);
+		}
+
+		if(!isset(requirements['bedroom_max'])) //This is true when only one bedroom attribute is given
+		{
+			match_percentage += match_bedroom(property['Bed'], requirements['bedroom_min']);
+		}
+		else
+		{
+			match_percentage += match_bedroom(property['Bed'], requirements['bedroom_min'], requirements['bedroom_max']);
+		}
+		if(match_percentage > 40)
+		{
+			add_to_matches_table(requirements['Id'], property['Id'], match_percentage);
+		}
+	}
+}

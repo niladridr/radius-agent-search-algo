@@ -1,0 +1,50 @@
+/*This function will be called whenever a property is added.
+The function goes through the req table and returns match % for all matches above 40% and saves the result in Matches table.
+All user defined functions called in thed function search_req are present in functions.txt.
+*/
+
+
+function search_requirements(array properties)
+{
+	req = run_query("SELECT * FROM req r WHERE 
+	distance_found_by_Haversine_formula < 10 AND 
+	((r.Price_max == NULL AND r.Price_min BETWEEN properties['Price'] - 25% AND properties['Price'] + 25%) OR (properties['Price'] >= r.Price_min - 25% of properties['Price'] AND properties['Price'] <= r.Price_max + 25% of properties['Price'] )) AND
+	((r.Bed_max == NULL AND r.Bed_min BETWEEN properties['Bed'] - 2 AND properties['Bed'] + 2) OR (properties['Bed'] >= r.Bed_min - 2 AND properties['Bed'] <= r.Bed_max + 2)) AND
+	((r.Bath_max == NULL AND r.Bath_min BETWEEN properties['Bath'] - 2 AND properties['Bath'] + 2) OR (properties['Bath'] >= r.Bath_min - 2 AND properties['Bath'] <= r.Bath_min + 2))
+	");
+
+
+	foreach req as req
+	{
+		int match_percentage = match_distance(req['Lat'], req['Long'], properties['Lat'], properties['Long']);
+		if(!isset(req['Price_max'])) //This is true when only one budget attribute is given
+		{
+			match_percentage += match_budget(properties['Price'], req['Price_min']);
+		}
+		else
+		{
+			match_percentage += match_budget(properties['Price'], req['Price_min'], req['Price_max']);
+		}
+		if(!isset(req['Bath_max'])) //This is true when only one bathroom attribute is given
+		{
+			match_percentage += match_bathroom(properties['Bath'], req['Bath_min']);
+		}
+		else
+		{
+			match_percentage += match_bathroom(properties['Bath'], req['Bath_min'], req['Bath_max']);
+		}
+
+		if(!isset(req['Bed_max'])) //This is true when only one bedroom attribute is given
+		{
+			match_percentage += match_bedroom(properties['Bed'], req['Bed_min']);
+		}
+		else
+		{
+			match_percentage += match_bedroom(properties['Bed'], req['Bed_min'], req['Bed_max']);
+		}
+		if(match_percentage > 40)
+		{
+			add_to_matches_table(req['Id'], properties['Id'], match_percentage);
+		}
+	}
+}
