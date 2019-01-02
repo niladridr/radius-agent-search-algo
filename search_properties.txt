@@ -37,8 +37,9 @@ function search_properties(array requirements)
 		int bedroom_max_limit = requirements['bedroom_max'] + 2;
 	}
 
-	array porperties_results = run_query("SELECT * FROM properties p WHERE distance_found_by_Haversine_formula < 10 AND Price BETWEEN Price_min_limit AND Price_max_limit AND Bed BETWEEN bed_min_limit AND bed_max_limit AND Bath BETWEEN bathroom_min_limit AND bathroom_max_limit");
+	array porperties_results = run_query("SELECT * FROM properties p WHERE ST_Distance_Sphere(point(p.Long, p.Lat),point(requirements['Long'], requirement['Lat'])) * .000621371192 < 10 AND Price BETWEEN Price_min_limit AND Price_max_limit AND Bed BETWEEN bed_min_limit AND bed_max_limit AND Bath BETWEEN bathroom_min_limit AND bathroom_max_limit");
 
+	//ST_Distance_Sphere is a MySql function introduced in v5.7 https://dev.mysql.com/doc/refman/5.7/en/spatial-convenience-functions.html#function_st-distance-sphere
 
 	foreach porperties_results as property
 	{

@@ -9,7 +9,19 @@
 */
 function match_distance(lat1, long1, lat2, long2)
 {
-	d = Haversineformula; //find distance in miles using Haversine Formula.
+	//calculating distance using haversine formula
+	int earthRadiusKm = 6371;
+
+	float dLat = (lat2-lat1) * pi/180;
+	float dLon = (lon2-lon1) * pi/180;
+
+	lat1 = (lat1) * pi/180;
+	lat2 = (lat2) * pi/180;
+
+	float a = sin(dLat/2) * sin(dLat/2) + sin(dLon/2) * sin(dLon/2) * cos(lat1) * cos(lat2); 
+	float c = 2 * atan2(sqrt(a), sqrt(1-a)); 
+	d = earthRadiusKm * c;
+
 	if( d <= 2)
 	{
 		return 30;

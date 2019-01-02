@@ -7,11 +7,13 @@ All user defined functions called in thed function search_req are present in fun
 function search_requirements(array properties)
 {
 	req = run_query("SELECT * FROM req r WHERE 
-	distance_found_by_Haversine_formula < 10 AND 
+	ST_Distance_Sphere(point(r.Long, r.Lat), point(properties['Long'], properties['Lat'])) * .000621371192 < 10 AND 
 	((r.Price_max == NULL AND r.Price_min BETWEEN properties['Price'] - 25% AND properties['Price'] + 25%) OR (properties['Price'] >= r.Price_min - 25% of properties['Price'] AND properties['Price'] <= r.Price_max + 25% of properties['Price'] )) AND
 	((r.Bed_max == NULL AND r.Bed_min BETWEEN properties['Bed'] - 2 AND properties['Bed'] + 2) OR (properties['Bed'] >= r.Bed_min - 2 AND properties['Bed'] <= r.Bed_max + 2)) AND
 	((r.Bath_max == NULL AND r.Bath_min BETWEEN properties['Bath'] - 2 AND properties['Bath'] + 2) OR (properties['Bath'] >= r.Bath_min - 2 AND properties['Bath'] <= r.Bath_min + 2))
 	");
+
+	//ST_Distance_Sphere is a MySql function introduced in v5.7 https://dev.mysql.com/doc/refman/5.7/en/spatial-convenience-functions.html#function_st-distance-sphere
 
 
 	foreach req as req
